@@ -20,7 +20,7 @@ pygame.display.set_caption("Player-Enemy Collision Game")
 
 COLLISION_SOUND_PATH = 'collision.wav'
 BACKGROUND_MUSIC_PATH = 'background_music.mp3'
-BACKGROUND_IMAGE_PATH =  'background.jpg'
+BACKGROUND_IMAGE_PATH = 'background.jpg'
 
 collision_sound = None
 try:
@@ -35,6 +35,14 @@ try:
 except pygame.error as e:
     print(f"Warning: Could not load background music {BACKGROUND_MUSIC_PATH}: {e}")
     print("Game will run without background music.")
+
+background_image = None
+try:
+    background_image = pygame.image.load(BACKGROUND_IMAGE_PATH).convert()
+    background_image = pygame.transform.scale(background_image, (SCREEN_WIDTH, SCREEN_HEIGHT))
+except pygame.error as e:
+    print(f"Warning: Could not load background image {BACKGROUND_IMAGE_PATH}: {e}")
+    print("Game will run without background image, using black background.")
 
 player_x = screen_width / 2 - player_width / 2
 player_y = screen_height - player_height - 10
@@ -81,7 +89,10 @@ while game_running:
             enemy_x_positions[i] = random.randint(0, screen_width - enemy_width)
             enemy_velocities_y[i] = random.uniform(0.5, 2.5)
 
-    screen.fill((0, 0, 0))
+    if background_image:
+        screen.blit(background_image, (0, 0))
+    else:
+        screen.fill((0, 0, 0))
 
     pygame.draw.rect(screen, (0, 0, 255), player_rect)
 
